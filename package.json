@@ -1,6 +1,5 @@
 {
   "name": "durhack-web-components",
-  "version": "0.1.0",
   "private": true,
   "scripts": {
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start",
