@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start"
+    "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start",
+    "prepublishOnly": "npm run build"
   },
   "exports": {
     "./*": "./dist/components/*.tsx"
