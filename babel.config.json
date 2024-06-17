@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    [
+      "@babel/plugin-syntax-typescript",
+      {
+        "isTSX": true
+      }
+    ],
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@": "./src/"
+        }
+      }
+    ]
+  ]
+}
