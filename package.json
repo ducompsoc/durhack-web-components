@@ -6,10 +6,10 @@
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start"
   },
   "exports": {
-    "./*": "./src/components/*.tsx"
+    "./*": "./dist/components/*.tsx"
   },
   "files": [
-    "src/**/*"
+    "dist/**/*"
   ],
   "devDependencies": {
     "@babel/cli": "^7.24.7",
