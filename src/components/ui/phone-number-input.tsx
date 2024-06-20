@@ -23,7 +23,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
+  CommandList, CommandSeparator,
 } from "@/components/ui/command";
 import { Input, InputProps } from "@/components/ui/input";
 import {
@@ -162,6 +162,7 @@ const CountrySelect = ({
                   .map(renderCountrySelectOption)
                 }
               </CommandGroup>
+              <CommandSeparator />
               <CommandGroup>
                 {options
                   .filter((x) => x.value && !prominentCountries.has(x.value))
