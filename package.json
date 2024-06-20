@@ -1,5 +1,6 @@
 {
   "name": "durhack-web-components",
+  "repository": "https://github.com/ducompsoc/durhack-web-components",
   "scripts": {
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start",
     "prepublishOnly": "npm run build"
