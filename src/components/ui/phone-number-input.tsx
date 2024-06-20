@@ -88,6 +88,7 @@ type CountrySelectProps = {
   value: RPNInput.Country;
   onChange: (value: RPNInput.Country) => void;
   options: CountrySelectOption[];
+  prominentCountries: Set<RPNInput.Country>;
 };
 
 const CountrySelect = ({
@@ -95,6 +96,7 @@ const CountrySelect = ({
   value,
   onChange,
   options,
+  prominentCountries,
 }: CountrySelectProps) => {
   const handleSelect = React.useCallback(
     (country: RPNInput.Country) => {
@@ -102,6 +104,33 @@ const CountrySelect = ({
     },
     [onChange],
   );
+  
+  function renderCountrySelectOption(option: CountrySelectOption) {
+    return (
+      <CommandItem
+        className="gap-2"
+        key={option.value}
+        onSelect={() => handleSelect(option.value)}
+      >
+        <FlagComponent
+          country={option.value}
+          countryName={option.label}
+        />
+        <span className="flex-1 text-sm">{option.label}</span>
+        {option.value && (
+          <span className="text-foreground/50 text-sm">
+            {`+${RPNInput.getCountryCallingCode(option.value)}`}
+          </span>
+        )}
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            option.value === value ? "opacity-100" : "opacity-0",
+          )}
+        />
+      </CommandItem>
+    )
+  }
 
   return (
     <Popover>
@@ -129,31 +158,15 @@ const CountrySelect = ({
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
                 {options
-                  .filter((x) => x.value)
-                  .map((option) => (
-                    <CommandItem
-                      className="gap-2"
-                      key={option.value}
-                      onSelect={() => handleSelect(option.value)}
-                    >
-                      <FlagComponent
-                        country={option.value}
-                        countryName={option.label}
-                      />
-                      <span className="flex-1 text-sm">{option.label}</span>
-                      {option.value && (
-                        <span className="text-foreground/50 text-sm">
-                          {`+${RPNInput.getCountryCallingCode(option.value)}`}
-                        </span>
-                      )}
-                      <CheckIcon
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          option.value === value ? "opacity-100" : "opacity-0",
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
+                  .filter((x) => x.value && prominentCountries.has(x.value))
+                  .map(renderCountrySelectOption)
+                }
+              </CommandGroup>
+              <CommandGroup>
+                {options
+                  .filter((x) => x.value && !prominentCountries.has(x.value))
+                  .map(renderCountrySelectOption)
+                }
               </CommandGroup>
             </ScrollArea>
           </CommandList>
