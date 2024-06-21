@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 type Option<TValue extends React.Key> = {
   value: TValue
   label: string
+  emoji?: string
 }
 
 type ComboBoxProps<TValue extends React.Key> = {
@@ -208,7 +209,10 @@ function OptionList() {
           setOpen(false)
         }}
       >
-        {option.label}
+        <div className="flex items-end gap-2">
+          {option.emoji ? <span>{option.emoji}</span> : <></>}
+          <span className="">{option.label}</span>
+        </div>
         <Check
           className={cn(
             "mr-2 h-4 w-4",
