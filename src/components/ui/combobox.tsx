@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/popover"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils";
+import {SelectLabel} from "@/components/ui/select";
 
 type Option<TValue extends React.Key> = {
   value: TValue
@@ -151,6 +152,19 @@ const ComboBoxButton = React.forwardRef<
   ({ children, className, ...props }, ref) => {
     const { placeholder, selectedOption } = useComboBox();
     
+    function LabelOrPlaceholder() {
+      if (selectedOption === null) {
+        return <>{placeholder}</>
+      }
+      
+      return (
+        <div className="flex items-end gap-2">
+          {selectedOption.emoji ? <span>{selectedOption.emoji}</span> : <></> }
+          <span>{selectedOption.label}</span>
+        </div>
+      )
+    }
+    
     return (
       <Button 
         variant="outline" 
@@ -159,7 +173,7 @@ const ComboBoxButton = React.forwardRef<
         {...props}
         ref={ref}
       >
-        {selectedOption ? <>{selectedOption.label}</> : <>{placeholder}</>}
+        <LabelOrPlaceholder />
         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     )
