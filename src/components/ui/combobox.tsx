@@ -172,12 +172,12 @@ const ComboBoxContent = React.forwardRef<
     onAnimationEnd?: (open: boolean) => void
   }
 >(
-  ({ ...props }, ref) => {
+  ({ className, ...props }, ref) => {
     const { isDesktop } = useComboBox();
     
     if (isDesktop) {
       return (
-       <PopoverContent className="w-[200px] p-0" align="start" { ...props } ref={ref}>
+       <PopoverContent className={cn("w-[300px] p-0", className)} align="start" { ...props } ref={ref}>
           <OptionList />
         </PopoverContent>
       )
