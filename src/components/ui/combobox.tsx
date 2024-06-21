@@ -195,7 +195,7 @@ const ComboBoxContent = React.forwardRef<
 ComboBoxContent.displayName = "ComboBoxContent"
 
 function OptionList() {
-  const { options, setSelectedOption, setOpen } = useComboBox();
+  const { options, setSelectedOption, setOpen, onChange } = useComboBox();
   
   return (
     <Command>
@@ -209,6 +209,7 @@ function OptionList() {
               value={option.value.toString()}
               onSelect={() => {
                 setSelectedOption(option)
+                onChange(option.value)
                 setOpen(false)
               }}
             >
