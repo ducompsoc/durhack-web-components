@@ -202,7 +202,7 @@ function OptionList() {
     return (
       <CommandItem
         key={option.value}
-        value={option.value.toString()}
+        value={option.label}
         onSelect={() => {
           setSelectedOption(option)
           onChange(option.value)
