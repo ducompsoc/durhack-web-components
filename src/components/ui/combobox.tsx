@@ -155,6 +155,7 @@ const ComboBoxButton = React.forwardRef<
         variant="outline" 
         role="combobox" 
         className={cn(className, "justify-between", !selectedOption && "text-muted-foreground")}
+        {...props}
         ref={ref}
       >
         {selectedOption ? <>{selectedOption.label}</> : <>{placeholder}</>}
