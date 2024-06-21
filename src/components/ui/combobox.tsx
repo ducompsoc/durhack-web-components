@@ -208,6 +208,7 @@ function OptionList() {
           onChange(option.value)
           setOpen(false)
         }}
+        className="flex justify-between cursor-pointer"
       >
         <div className="flex items-end gap-2">
           {option.emoji ? <span>{option.emoji}</span> : <></>}
