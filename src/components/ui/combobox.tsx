@@ -10,7 +10,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,
+  CommandList, CommandSeparator,
 } from "@/components/ui/command"
 import {
   Drawer,
@@ -195,7 +195,23 @@ const ComboBoxContent = React.forwardRef<
 ComboBoxContent.displayName = "ComboBoxContent"
 
 function OptionList() {
-  const { options, setSelectedOption, setOpen, onChange } = useComboBox();
+  const { options, prominentOptions, setSelectedOption, setOpen, onChange } = useComboBox();
+  
+  function renderOption(option: Option<React.Key>) {
+    return (
+      <CommandItem
+        key={option.value}
+        value={option.value.toString()}
+        onSelect={() => {
+          setSelectedOption(option)
+          onChange(option.value)
+          setOpen(false)
+        }}
+      >
+        {option.label}
+      </CommandItem>
+    )
+  }
   
   return (
     <Command>
@@ -203,19 +219,17 @@ function OptionList() {
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
-          {options.map((option) => (
-            <CommandItem
-              key={option.value}
-              value={option.value.toString()}
-              onSelect={() => {
-                setSelectedOption(option)
-                onChange(option.value)
-                setOpen(false)
-              }}
-            >
-              {option.label}
-            </CommandItem>
-          ))}
+          {options
+            .filter(option => prominentOptions?.has(option.value) ?? false)
+            .map(renderOption)
+          }
+        </CommandGroup>
+        <CommandSeparator />
+        <CommandGroup>
+          {options
+            .filter(option => !(prominentOptions?.has(option.value) ?? false))
+            .map(renderOption)
+          }
         </CommandGroup>
       </CommandList>
     </Command>
