@@ -222,7 +222,7 @@ function OptionList() {
       </CommandItem>
     )
   }
-  
+
   return (
     <Command>
       <CommandInput placeholder="Filter options..." />
