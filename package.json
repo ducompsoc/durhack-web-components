@@ -7,7 +7,8 @@
     "prepublishOnly": "npm run build"
   },
   "exports": {
-    "./*": "./dist/components/*.tsx"
+    "./*": "./dist/components/*.tsx",
+    "./ui/use-toast": "./dist/components/ui/use-toast.ts"
   },
   "files": [
     "dist/**/*"
