@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -195,7 +195,7 @@ const ComboBoxContent = React.forwardRef<
 ComboBoxContent.displayName = "ComboBoxContent"
 
 function OptionList() {
-  const { options, prominentOptions, setSelectedOption, setOpen, onChange } = useComboBox();
+  const { options, prominentOptions, selectedOption, setSelectedOption, setOpen, onChange } = useComboBox();
   
   function renderOption(option: Option<React.Key>) {
     return (
@@ -209,6 +209,12 @@ function OptionList() {
         }}
       >
         {option.label}
+        <Check
+          className={cn(
+            "mr-2 h-4 w-4",
+            option.value === selectedOption?.value ? "opacity-100" : "opacity-0",
+          )}
+        />
       </CommandItem>
     )
   }
