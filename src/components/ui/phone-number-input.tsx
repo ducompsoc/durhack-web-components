@@ -140,6 +140,7 @@ const CountrySelect = ({
         <Button
           type="button"
           variant="outline"
+          size="form"
           className={cn("flex gap-1 rounded-e-none rounded-s-lg px-3")}
           disabled={disabled}
         >
