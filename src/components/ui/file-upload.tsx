@@ -10,7 +10,7 @@ import truncate from 'truncate'
 import { Upload, FileText as PDF, Image, Trash } from "lucide-react"
 
 import { cn } from '@/lib/utils'
-import {ScrollArea} from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type DropzoneState = ReactDropzoneState
 
@@ -32,7 +32,7 @@ const FileUploadContext = React.createContext<FileUploadContextProps | null>(nul
 function useFileUpload() {
   const context = React.useContext(FileUploadContext)
   if (!context) {
-    throw new Error("useDropzone must be used within a <Dropzone />")
+    throw new Error("useFileUpload must be used within a <FileUpload />")
   }
 
   return context
@@ -71,47 +71,35 @@ const FileUpload = ({ className, children, dropzoneOptions, onChange, multiDropB
     setFiles(files => files.toSpliced(index, 1))
   }
 
-  function ContextProvider({ children, ...props }: Omit<React.ComponentProps<typeof FileUploadContext.Provider>, "value">) {
-    return (
-      <FileUploadContext.Provider
-        value={{
-          dropzoneState,
-          files,
-          dropzoneOptions: dropzoneOptions,
-          onChange,
-          errorMessages,
-          multiDropBehaviour,
-          removeFile
-        }}
-        {...props}
-      >
-        {children}
-      </FileUploadContext.Provider>
-    )
-  }
-
   return (
-    <ContextProvider>
+    <FileUploadContext.Provider
+      value={{
+        dropzoneState,
+        files,
+        dropzoneOptions: dropzoneOptions,
+        onChange,
+        errorMessages,
+        multiDropBehaviour,
+        removeFile
+      }}
+    >
       <div className={cn("flex flex-col gap-2", className)} {...props}>
         {children}
       </div>
-    </ContextProvider>
+    </FileUploadContext.Provider>
   )
 }
 
 const FileUploadDropzoneRoot = ({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { dropzoneState: { getRootProps }} = useFileUpload()
-
-  const { className: classNameFromDropzone, ...propsFromDropzone} = getRootProps()
+  const { dropzoneState } = useFileUpload()
 
   return (
     <div
       className={cn(
-        classNameFromDropzone,
         "flex justify-center items-center w-full h-32 border-dashed border-2 border-gray-200 rounded-lg hover:bg-accent hover:text-accent-foreground transition-all select-none cursor-pointer",
         className,
       )}
-      {...propsFromDropzone}
+      {...dropzoneState.getRootProps()}
       {...props}
     >
       {children}
@@ -120,12 +108,10 @@ const FileUploadDropzoneRoot = ({ className, children, ...props }: React.HTMLAtt
 }
 
 const FileUploadDropzoneInput = ({ className, children, ...props }: React.HTMLAttributes<HTMLInputElement>) => {
-  const { dropzoneState: { getInputProps }} = useFileUpload()
-
-  const { className: classNameFromDropzone, ...propsFromDropzone } = getInputProps()
+  const { dropzoneState } = useFileUpload()
 
   return (
-    <input className={cn(classNameFromDropzone, className)} {...getInputProps()} {...props} />
+    <input className={className} {...dropzoneState.getInputProps()} {...props} />
   )
 }
 
