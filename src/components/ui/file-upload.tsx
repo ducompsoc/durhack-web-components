@@ -15,14 +15,15 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 type DropzoneState = ReactDropzoneState
 
 type FileUploadProps = {
-  options?: ReactDropzoneOptions | undefined
+  multiDropBehaviour: "add" | "replace"
+  dropzoneOptions?: ReactDropzoneOptions | undefined
   onChange(files: File[]): void
 }
 
 type FileUploadContextProps = {
   dropzoneState: DropzoneState
   files: File[]
-  errorMessage: string | undefined
+  errorMessages: string[]
   removeFile(index: number): void
 } & FileUploadProps
 
@@ -37,26 +38,34 @@ function useFileUpload() {
   return context
 }
 
-const FileUpload = ({ className, children, options, onChange, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & FileUploadProps) => {
+const FileUpload = ({ className, children, dropzoneOptions, onChange, multiDropBehaviour, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & FileUploadProps) => {
   const [files, setFiles] = React.useState<File[]>([])
-  const [errorMessage, setErrorMessage] = React.useState<string>()
+  const [errorMessages, setErrorMessages] = React.useState<string[]>([])
 
   React.useEffect(() => onChange(files), [files])
 
-  const dropzoneState = useReactDropzone({
-    ...options,
-    onDrop(acceptedFiles, fileRejections, event) {
-      options?.onDrop?.(acceptedFiles, fileRejections, event)
-      if (fileRejections.length > 0) {
-        let _errorMessage = `Could not accept ${ fileRejections[0].file.name }`
-        if (fileRejections.length > 1) _errorMessage += `, and ${ fileRejections.length - 1 } other files.`
-        setErrorMessage(_errorMessage)
-      } else {
-        setErrorMessage(undefined)
+  const onDrop = React.useCallback<Exclude<ReactDropzoneOptions["onDrop"], undefined>>((acceptedFiles, fileRejections, event) => {
+    dropzoneOptions?.onDrop?.(acceptedFiles, fileRejections, event)
+    let newErrorMessages: string[] = []
+    try {
+      if (fileRejections.length == 1) newErrorMessages.push(`Could not accept ${fileRejections[0].file.name}`)
+      if (fileRejections.length > 1) newErrorMessages.push(`Could not accept ${fileRejections.length} files.`)
+      if (multiDropBehaviour === "add" && dropzoneOptions?.maxFiles != null && files.length + acceptedFiles.length > dropzoneOptions.maxFiles ) {
+        if (acceptedFiles.length === 1) newErrorMessages.push(`${acceptedFiles[0].name} was rejected as its acceptance would exceed the file count limit.`)
+        if (acceptedFiles.length > 1) newErrorMessages.push(`${acceptedFiles.length} files were rejected as their acceptance would exceed the file count limit.`)
+        return
       }
-      if (acceptedFiles.length > 0) setFiles(files => [...files, ...acceptedFiles])
-    },
-  })
+    } finally {
+      setErrorMessages(newErrorMessages)
+    }
+
+    if (acceptedFiles.length === 0) return
+
+    if (multiDropBehaviour === "add") setFiles(files => files.toSpliced(files.length, 0, ...acceptedFiles))
+    if (multiDropBehaviour === "replace") setFiles(acceptedFiles)
+  }, [files])
+
+  const dropzoneState = useReactDropzone({ ...dropzoneOptions, onDrop })
 
   const removeFile = (index: number) => {
     setFiles(files => files.toSpliced(index, 1))
@@ -68,9 +77,10 @@ const FileUpload = ({ className, children, options, onChange, ...props }: Omit<R
         value={{
           dropzoneState,
           files,
-          options,
+          dropzoneOptions: dropzoneOptions,
           onChange,
-          errorMessage,
+          errorMessages,
+          multiDropBehaviour,
           removeFile
         }}
         {...props}
@@ -120,17 +130,17 @@ const FileUploadDropzoneInput = ({ className, children, ...props }: React.HTMLAt
 }
 
 const FileUploadDropzoneBasket = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-  const { dropzoneState, options} = useFileUpload()
+  const { dropzoneState, dropzoneOptions} = useFileUpload()
 
   if (dropzoneState.isDragAccept) return (
     <div className='text-sm font-medium'>Drop your files here!</div>
   )
   
   const MaxSizeTip = () => {
-    if (options?.maxSize == null) return null
+    if (dropzoneOptions?.maxSize == null) return null
     return (
       <div className='text-xs text-gray-400 font-medium'>
-        Max. file size: {(options.maxSize / (1024 * 1024)).toFixed(2)} MB
+        Max. file size: {(dropzoneOptions.maxSize / (1024 * 1024)).toFixed(2)} MB
       </div>
     )
   }
@@ -146,13 +156,16 @@ const FileUploadDropzoneBasket = ({ className, ...props }: React.HTMLAttributes<
 }
 
 const FileUploadErrorMessage = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  const { errorMessage} = useFileUpload()
-  if (errorMessage == null) return null
-  return (
-    <span className={cn('text-xs text-red-600 mt-3', className)} {...props}>
-      { errorMessage }
-   </span>
+  const { errorMessages} = useFileUpload()
+  if (errorMessages.length == 0) return null
+
+  const renderMessage = (message: string, index: number) => (
+    <span key={index} className={cn('text-xs text-red-600 mt-3', className)} {...props}>
+      {message}
+    </span>
   )
+
+  return (errorMessages.map(renderMessage))
 }
 
 const FileUploadFileList = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
