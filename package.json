@@ -48,6 +48,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "embla-carousel-react": "^8.2.1",
     "lucide-react": "^0.395.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.5",
