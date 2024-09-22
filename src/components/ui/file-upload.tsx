@@ -17,15 +17,19 @@ type DropzoneState = ReactDropzoneState
 type FileUploadProps = {
   multiDropBehaviour: "add" | "replace"
   dropzoneOptions?: ReactDropzoneOptions | undefined
+  files?: File[]
   onChange(files: File[]): void
 }
 
 type FileUploadContextProps = {
   dropzoneState: DropzoneState
-  files: File[]
   errorMessages: string[]
   removeFile(index: number): void
-} & FileUploadProps
+  multiDropBehaviour: "add" | "replace"
+  dropzoneOptions?: ReactDropzoneOptions | undefined
+  files: File[]
+  onChange(files: File[]): void
+}
 
 const FileUploadContext = React.createContext<FileUploadContextProps | null>(null)
 
@@ -38,8 +42,8 @@ function useFileUpload() {
   return context
 }
 
-const FileUpload = ({ className, children, dropzoneOptions, onChange, multiDropBehaviour, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & FileUploadProps) => {
-  const [files, setFiles] = React.useState<File[]>([])
+const FileUpload = ({ className, children, dropzoneOptions, onChange, files: _files, multiDropBehaviour, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & FileUploadProps) => {
+  const [files, setFiles] = React.useState<File[]>(_files ?? [])
   const [errorMessages, setErrorMessages] = React.useState<string[]>([])
 
   React.useEffect(() => onChange(files), [files])
@@ -121,7 +125,7 @@ const FileUploadDropzoneBasket = ({ className, ...props }: React.HTMLAttributes<
   if (dropzoneState.isDragAccept) return (
     <div className='text-sm font-medium'>Drop your files here!</div>
   )
-  
+
   const MaxSizeTip = () => {
     if (dropzoneOptions?.maxSize == null) return null
     return (
