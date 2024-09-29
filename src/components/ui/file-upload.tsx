@@ -46,7 +46,10 @@ const FileUpload = ({ className, children, dropzoneOptions, onChange, files: _fi
   const [files, setFiles] = React.useState<File[]>(_files ?? [])
   const [errorMessages, setErrorMessages] = React.useState<string[]>([])
 
-  React.useEffect(() => onChange(files), [files])
+  React.useEffect(() => {
+    onChange(files)
+    return undefined
+  }, [files])
 
   const onDrop = React.useCallback<Exclude<ReactDropzoneOptions["onDrop"], undefined>>((acceptedFiles, fileRejections, event) => {
     dropzoneOptions?.onDrop?.(acceptedFiles, fileRejections, event)
