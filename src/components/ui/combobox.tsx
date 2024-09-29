@@ -75,9 +75,10 @@ function ComboBox<TValue extends React.Key>(
 ) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
-  const [selectedOption, setSelectedOption] = React.useState<Option<React.Key> | null>(
-    null
-  )
+  const [selectedOption, setSelectedOption] = React.useState<Option<React.Key> | null>(() => {
+    if (value == null) return null
+    return options.find((option) => option.value === value) ?? null
+  });
   
   function ContextProvider({ children, ...props }: Omit<React.ComponentProps<typeof ComboBoxContext.Provider>, "value">) {
     return (
