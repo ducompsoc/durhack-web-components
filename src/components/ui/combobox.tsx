@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,7 +10,8 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList, CommandSeparator,
+  CommandList,
+  CommandSeparator,
 } from "@/components/ui/command"
 import {
   Drawer,
@@ -24,7 +25,6 @@ import {
 } from "@/components/ui/popover"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils";
-import {SelectLabel} from "@/components/ui/select";
 
 type Option<TValue extends React.Key> = {
   value: TValue
@@ -128,7 +128,7 @@ const ComboBoxTrigger = React.forwardRef<
 >(
   ({ children, ...props }, ref) => {
     const { isDesktop } = useComboBox();
-    
+
     if (isDesktop) {
       return (
         <PopoverTrigger asChild ref={ref}>
@@ -136,7 +136,7 @@ const ComboBoxTrigger = React.forwardRef<
         </PopoverTrigger>
       )
     }
-    
+
     return (
       <DrawerTrigger asChild ref={ref}>
         {children}
@@ -159,9 +159,9 @@ const ComboBoxButton = React.forwardRef<
       }
       
       return (
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 overflow-hidden">
           {selectedOption.emoji ? <span>{selectedOption.emoji}</span> : <></> }
-          <span>{selectedOption.label}</span>
+          <span className="truncate">{selectedOption.label}</span>
         </div>
       )
     }
@@ -190,7 +190,7 @@ const ComboBoxContent = React.forwardRef<
 >(
   ({ className, ...props }, ref) => {
     const { isDesktop } = useComboBox();
-    
+
     if (isDesktop) {
       return (
        <PopoverContent className={cn("w-[300px] p-0", className)} align="start" { ...props } ref={ref}>
@@ -198,7 +198,7 @@ const ComboBoxContent = React.forwardRef<
         </PopoverContent>
       )
     }
-    
+
     return (
       <DrawerContent {...props} ref={ref} >
         <div className="mt-4 border-t">
@@ -225,9 +225,9 @@ function OptionList() {
         }}
         className="flex justify-between cursor-pointer"
       >
-        <div className="flex items-end gap-2">
+        <div className="flex items-end gap-2 overflow-hidden">
           {option.emoji ? <span>{option.emoji}</span> : <></>}
-          <span className="">{option.label}</span>
+          <span className="truncate">{option.label}</span>
         </div>
         <Check
           className={cn(
@@ -262,4 +262,4 @@ function OptionList() {
   )
 }
 
-export { ComboBox, ComboBoxTrigger,ComboBoxButton, ComboBoxContent}
+export { ComboBox, ComboBoxTrigger, ComboBoxButton, ComboBoxContent }
