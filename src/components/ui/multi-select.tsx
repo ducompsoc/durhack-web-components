@@ -3,7 +3,7 @@
  */
 
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
-import { X, Check, ChevronDown } from "lucide-react";
+import { X, Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { forwardRef, useEffect } from "react";
 
@@ -489,8 +489,8 @@ const MultiSelect = React.forwardRef<
               }}
               className={cn(
                 selected.length > 0
-                  ? "absolute -right-2 h-6 w-6 p-0" // X
-                  : "absolute right-1 mt-2 h-6 w-6 p-0", // ChevronDown
+                  ? "absolute -right-1 h-6 w-6 p-0" // X
+                  : "absolute right-2 mt-2 h-6 w-6 p-0", // ChevronUpDown
               )}
             >
               {selected.length > 0 ? (
@@ -511,7 +511,7 @@ const MultiSelect = React.forwardRef<
                   )}
                 />
               ) : (
-                <ChevronDown className="pointer h-4 w-4 opacity-30" />
+                <ChevronsUpDown className="pointer h-4 w-4 opacity-50" />
               )}
             </button>
           </div>
@@ -596,7 +596,7 @@ const MultiSelect = React.forwardRef<
           )}
         </div>
       </Command>
-    );
+    );r
   },
 );
 
