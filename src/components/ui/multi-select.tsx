@@ -26,7 +26,7 @@ export interface Option<T> {
 
 type GroupOption<T> = Record<string, Option<T>[]>;
 
-interface MultipleSelectorProps<T> {
+export type MultiSelectProps<T> = {
   value?: T[];
   defaultOptions?: Option<T>[];
   options?: Option<T>[];
@@ -55,7 +55,7 @@ interface MultipleSelectorProps<T> {
   hideOptionOnSelect?: boolean;
 }
 
-export interface MultipleSelectorRef<T> {
+export type MultiSelectRef<T> = {
   selectedValue: T[];
   input: HTMLInputElement;
 }
@@ -151,9 +151,9 @@ const CommandEmpty = forwardRef<
 
 CommandEmpty.displayName = "CommandEmpty";
 
-const MultipleSelector = React.forwardRef<
-  MultipleSelectorRef<unknown>,
-  MultipleSelectorProps<unknown>
+const MultiSelect = React.forwardRef<
+  MultiSelectRef<unknown>,
+  MultiSelectProps<unknown>
 >(
   (
     {
@@ -180,8 +180,8 @@ const MultipleSelector = React.forwardRef<
       commandProps,
       inputProps,
       hideClearAllButton = false,
-    }: MultipleSelectorProps<unknown>,
-    ref: React.Ref<MultipleSelectorRef<unknown>>,
+    }: MultiSelectProps<unknown>,
+    ref: React.Ref<MultiSelectRef<unknown>>,
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
@@ -600,5 +600,5 @@ const MultipleSelector = React.forwardRef<
   },
 );
 
-MultipleSelector.displayName = "MultipleSelector";
-export default MultipleSelector;
+MultiSelect.displayName = "MultiSelect";
+export { MultiSelect }
