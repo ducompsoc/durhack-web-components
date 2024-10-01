@@ -596,7 +596,7 @@ const MultiSelect = React.forwardRef<
           )}
         </div>
       </Command>
-    );r
+    );
   },
 );
 
