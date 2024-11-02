@@ -8,7 +8,7 @@
   },
   "exports": {
     "./*": "./dist/components/*.tsx",
-    "./ui/use-toast": "./dist/components/ui/use-toast.ts"
+    "./hooks/*": "./dist/hooks/*.ts"
   },
   "files": [
     "dist/**/*"
