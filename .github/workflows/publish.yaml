@@ -23,7 +23,12 @@ jobs:
       - run: git config --global user.name "${{ github.actor }}"
       - run: git config --global user.email "github-action-${{ github.actor }}@users.noreply.github.com"
       - run: |
-          pnpm version --no-git-tag-version "$(git describe --tags --match "v*" --abbrev=0)"
-      - run: pnpm publish --access public --no-git-checks
+          pnpm version --no-git-tag-version "${{ github.event.release.tag_name }}"
+      - run: |
+          npm_tag=latest
+          if [[ "${{ github.event.release.tag_name }}" == *-* ]]; then 
+            npm_tag=next;
+          fi
+          pnpm publish --access public --no-git-checks --tag "$npm_tag"
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
