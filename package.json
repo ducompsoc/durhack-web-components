@@ -59,5 +59,9 @@
     "truncate": "^3.0.0",
     "vaul": "^1.1.2",
     "zod": "^3.25.67"
-  }
+  },
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "engineStrict": true
 }
