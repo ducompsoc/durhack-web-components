@@ -106,7 +106,7 @@ function ComboBox<TValue extends React.Key>(
   if (isDesktop) {
     return (
       <ContextProvider>
-        <Popover open={open} onOpenChange={setOpen} {...props}>
+        <Popover open={open} onOpenChange={setOpen} data-slot="combobox" {...props}>
           {children}
         </Popover>
       </ContextProvider>
@@ -115,100 +115,98 @@ function ComboBox<TValue extends React.Key>(
   
   return (
     <ContextProvider>
-      <Drawer open={open} onOpenChange={setOpen} {...props}>
+      <Drawer open={open} onOpenChange={setOpen} data-slot="combobox" {...props}>
         {children}
       </Drawer>
     </ContextProvider>
   )
 }
 
-const ComboBoxTrigger = React.forwardRef<
-  HTMLButtonElement,
-  React.HTMLAttributes<typeof HTMLButtonElement>
->(
-  ({ children, ...props }, ref) => {
-    const { isDesktop } = useComboBox();
+function ComboBoxTrigger(
+  {
+    children,
+    ...props
+  }: React.ComponentProps<"button">
+) {
+  const {isDesktop} = useComboBox();
 
-    if (isDesktop) {
-      return (
-        <PopoverTrigger asChild ref={ref}>
-          {children}
-        </PopoverTrigger>
-      )
-    }
-
+  if (isDesktop) {
     return (
-      <DrawerTrigger asChild ref={ref}>
+      <PopoverTrigger asChild data-slot="combobox-trigger" {...props}>
         {children}
-      </DrawerTrigger>
+      </PopoverTrigger>
     )
   }
-)
-ComboBoxTrigger.displayName = "ComboBoxTrigger"
 
-const ComboBoxButton = React.forwardRef<
-  React.ElementRef<typeof Button>,
-  React.ComponentPropsWithoutRef<typeof Button>
->(
-  ({ children, className, ...props }, ref) => {
-    const { placeholder, selectedOption } = useComboBox();
-    
-    function LabelOrPlaceholder() {
-      if (selectedOption === null) {
-        return <>{placeholder}</>
-      }
-      
-      return (
-        <div className="flex items-end gap-2 overflow-hidden">
-          {selectedOption.emoji ? <span>{selectedOption.emoji}</span> : <></> }
-          <span className="truncate">{selectedOption.label}</span>
-        </div>
-      )
+  return (
+    <DrawerTrigger asChild data-slot="combobox-trigger" {...props}>
+      {children}
+    </DrawerTrigger>
+  )
+}
+
+function ComboBoxButton(
+  {
+    children,
+    className,
+    ...props
+  }: React.ComponentProps<"button">
+) {
+  const {placeholder, selectedOption} = useComboBox();
+
+  function LabelOrPlaceholder() {
+    if (selectedOption === null) {
+      return <>{placeholder}</>
     }
-    
+
     return (
-      <Button 
-        variant="outline" 
-        role="combobox" 
-        className={cn("justify-between w-full", !selectedOption && "text-muted-foreground", className)}
-        {...props}
-        ref={ref}
-      >
-        <LabelOrPlaceholder />
-        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </Button>
+      <div className="flex items-end gap-2 overflow-hidden">
+        {selectedOption.emoji ? <span>{selectedOption.emoji}</span> : <></>}
+        <span className="truncate">{selectedOption.label}</span>
+      </div>
     )
   }
-)
-ComboBoxButton.displayName = "ComboBoxButton"
 
-const ComboBoxContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  return (
+    <Button
+      data-slot="combobox-button"
+      variant="outline"
+      role="combobox"
+      className={cn("justify-between w-full", !selectedOption && "text-muted-foreground", className)}
+      {...props}
+    >
+      <LabelOrPlaceholder/>
+      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50"/>
+    </Button>
+  )
+}
+
+function ComboBoxContent(
+  {
+    className,
+    ...props
+  }: React.ComponentProps<"div"> & {
     onAnimationEnd?: (open: boolean) => void
   }
->(
-  ({ className, ...props }, ref) => {
-    const { isDesktop } = useComboBox();
+) {
+  const {isDesktop} = useComboBox();
 
-    if (isDesktop) {
-      return (
-       <PopoverContent className={cn("w-[300px] p-0", className)} align="start" { ...props } ref={ref}>
-          <OptionList />
-        </PopoverContent>
-      )
-    }
-
+  if (isDesktop) {
     return (
-      <DrawerContent {...props} ref={ref} >
-        <div className="mt-4 border-t">
-          <OptionList />
-        </div>
-      </DrawerContent>
+      <PopoverContent className={cn("w-[300px] p-0", className)} align="start" data-slot="combobox-content" {...props}>
+        <OptionList/>
+      </PopoverContent>
     )
   }
-)
-ComboBoxContent.displayName = "ComboBoxContent"
+
+  return (
+    <DrawerContent data-slot="combobox-content" {...props}>
+      <div className="mt-4 border-t">
+        <OptionList/>
+      </div>
+    </DrawerContent>
+  )
+}
 
 function OptionList() {
   const { options, prominentOptions, selectedOption, setSelectedOption, setOpen, onChange } = useComboBox();
