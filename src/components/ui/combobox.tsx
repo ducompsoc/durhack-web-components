@@ -149,8 +149,9 @@ function ComboBoxButton(
   {
     children,
     className,
+    variant,
     ...props
-  }: React.ComponentProps<"button">
+  }: React.ComponentProps<typeof Button>
 ) {
   const {placeholder, selectedOption} = useComboBox();
 
@@ -170,7 +171,7 @@ function ComboBoxButton(
   return (
     <Button
       data-slot="combobox-button"
-      variant="outline"
+      variant={variant ?? "outline"}
       role="combobox"
       className={cn("justify-between w-full", !selectedOption && "text-muted-foreground", className)}
       {...props}
