@@ -168,7 +168,7 @@ function MultiSelect(
     inputProps,
     hideClearAllButton = false
   }: MultiSelectProps<unknown> & {
-    ref: React.RefObject<MultiSelectRef<unknown>>;
+    ref?: React.Ref<MultiSelectRef<unknown>> | undefined;
   }
 ) {
   const inputRef = React.useRef<HTMLInputElement>(null);
