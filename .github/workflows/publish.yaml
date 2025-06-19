@@ -14,14 +14,15 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
-      - uses: actions/setup-node@v4
+      - uses: Lordfirespeed/setup-node@v0.1
         with:
-          node-version: 20
+          node-version-file: package.json
           registry-url: https://registry.npmjs.org/
-      - run: yarn install
+          package-managers: pnpm
+      - run: pnpm install
       - run: git config --global user.name "${{ github.actor }}"
       - run: git config --global user.email "github-action-${{ github.actor }}@users.noreply.github.com"
-      - run: npm version from-git --no-git-tag-version
-      - run: npm publish --access public
+      - run: pnpm version from-git --no-git-tag-version
+      - run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
