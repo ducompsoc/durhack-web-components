@@ -169,7 +169,7 @@ const FileUploadFileList = ({ className, ...props }: React.HTMLAttributes<HTMLDi
     return (
       <div
         key={index}
-        className='flex justify-between items-center flex-row w-full h-16 mt-2 px-4 border-solid border-2 border-gray-200 rounded-lg shadow-sm'
+        className='flex justify-between items-center flex-row w-full h-16 mt-2 px-4 border-solid border-2 border-gray-200 rounded-lg shadow-xs'
       >
         <div className='flex items-center flex-row gap-4 h-full'>
           {
@@ -189,7 +189,7 @@ const FileUploadFileList = ({ className, ...props }: React.HTMLAttributes<HTMLDi
           </div>
         </div>
         <div
-          className='p-2 rounded-full border-solid border-2 border-gray-100 shadow-sm hover:bg-accent transition-all select-none cursor-pointer'
+          className='p-2 rounded-full border-solid border-2 border-gray-100 shadow-xs hover:bg-accent transition-all select-none cursor-pointer'
           onClick={() => removeFile(index)}
         >
           <Trash className='w-4 h-4'/>
