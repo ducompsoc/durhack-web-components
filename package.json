@@ -5,7 +5,7 @@
   "scripts": {
     "prebuild": "pnpm run type-check",
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm run build",
     "type-check": "tsc --noEmit"
   },
   "exports": {
