@@ -35,53 +35,58 @@ import {
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "./scroll-area";
 
-type PhoneInputProps = Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  "onChange" | "value"
-> &
-  Omit<RPNInput.Props<typeof RPNInput.default>, "onChange"> & {
+type PhoneInputProps = unknown 
+  & Omit<
+    React.ComponentPropsWithoutRef<"input">,
+    "onChange" | "value"
+  >
+  & Omit<React.ComponentPropsWithRef<typeof RPNInput.default>, "onChange">
+  & {
     onChange?: (value: RPNInput.Value) => void;
   };
 
-const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
-  React.forwardRef<React.ElementRef<typeof RPNInput.default>, PhoneInputProps>(
-    ({ className, onChange, ...props }, ref) => {
-      return (
-        <RPNInput.default
-          ref={ref}
-          className={cn("flex", className)}
-          flagComponent={FlagComponent}
-          countrySelectComponent={CountrySelect}
-          inputComponent={InputComponent}
-          /**
-           * Handles the onChange event.
-           *
-           * react-phone-number-input might trigger the onChange event as undefined
-           * when a valid phone number is not entered. To prevent this,
-           * the value is coerced to an empty string.
-           *
-           * @param {E164Number | undefined} value - The entered value
-           */
-          onChange={(value) => onChange?.(value || "" as RPNInput.Value)}
-          {...props}
-        />
-      );
-    },
-  );
-PhoneInput.displayName = "PhoneInput";
-
-const InputComponent = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, ...props }, ref) => (
-    <Input
-      className={cn("rounded-e-lg rounded-s-none", className)}
-      type="tel"
-      inputMode="tel"
+function PhoneInput(
+  {
+    className,
+    onChange,
+    ...props
+  }: PhoneInputProps
+) {
+  return (
+    <RPNInput.default
+      data-slot="phone-input"
+      className={cn("flex", className)}
+      flagComponent={FlagComponent}
+      countrySelectComponent={CountrySelect}
+      inputComponent={InputComponent}
+      /**
+       * Handles the onChange event.
+       *
+       * react-phone-number-input might trigger the onChange event as undefined
+       * when a valid phone number is not entered. To prevent this,
+       * the value is coerced to an empty string.
+       *
+       * @param {E164Number | undefined} value - The entered value
+       */
+      onChange={(value) => onChange?.(value || "" as RPNInput.Value)}
       {...props}
-      ref={ref}
     />
-  ),
-);
-InputComponent.displayName = "InputComponent";
+  );
+}
+
+function InputComponent(
+  {
+    className,
+    ...props
+  }: InputProps
+) {
+  return <Input
+    className={cn("rounded-e-lg rounded-s-none", className)}
+    type="tel"
+    inputMode="tel"
+    {...props}
+  />;
+}
 
 type CountrySelectOption = { label: string; value: RPNInput.Country };
 
@@ -93,20 +98,22 @@ type CountrySelectProps = {
   prominentCountries: Set<RPNInput.Country>;
 };
 
-const CountrySelect = ({
-  disabled,
-  value,
-  onChange,
-  options,
-  prominentCountries,
-}: CountrySelectProps) => {
+function CountrySelect(
+  {
+    disabled,
+    value,
+    onChange,
+    options,
+    prominentCountries,
+  }: CountrySelectProps
+) {
   const handleSelect = React.useCallback(
     (country: RPNInput.Country) => {
       onChange(country);
     },
     [onChange],
   );
-  
+
   function renderCountrySelectOption(option: CountrySelectOption) {
     return (
       <CommandItem
@@ -144,7 +151,7 @@ const CountrySelect = ({
           className={cn("flex gap-1 rounded-e-none rounded-s-lg px-3")}
           disabled={disabled}
         >
-          <FlagComponent country={value} countryName={value} />
+          <FlagComponent country={value} countryName={value}/>
           <ChevronsUpDown
             className={cn(
               "-mr-2 h-4 w-4 opacity-50",
@@ -157,7 +164,7 @@ const CountrySelect = ({
         <Command>
           <CommandList>
             <ScrollArea className="h-72">
-              <CommandInput placeholder="Search country..." />
+              <CommandInput placeholder="Search country..."/>
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
                 {options
@@ -165,7 +172,7 @@ const CountrySelect = ({
                   .map(renderCountrySelectOption)
                 }
               </CommandGroup>
-              <CommandSeparator />
+              <CommandSeparator/>
               <CommandGroup>
                 {options
                   .filter((x) => x.value && !prominentCountries.has(x.value))
@@ -178,17 +185,16 @@ const CountrySelect = ({
       </PopoverContent>
     </Popover>
   );
-};
+}
 
-const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
+function FlagComponent({country, countryName}: RPNInput.FlagProps) {
   const Flag = flags[country];
 
   return (
     <span className="bg-foreground/20 flex h-4 w-6 overflow-hidden rounded-sm">
-      {Flag && <Flag title={countryName} />}
+      {Flag && <Flag title={countryName}/>}
     </span>
   );
-};
-FlagComponent.displayName = "FlagComponent";
+}
 
 export { PhoneInput };
