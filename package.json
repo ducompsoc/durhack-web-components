@@ -3,8 +3,10 @@
   "repository": "https://github.com/ducompsoc/durhack-web-components",
   "license": "LGPL-3.0-or-later",
   "scripts": {
+    "prebuild": "pnpm run type-check",
     "build": "babel src --out-dir dist --extensions \".ts,.tsx\" --keep-file-extension --delete-dir-on-start",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "type-check": "tsc --noEmit"
   },
   "exports": {
     "./*": "./dist/components/*.tsx",
