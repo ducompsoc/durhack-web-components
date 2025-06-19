@@ -22,14 +22,14 @@ function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) 
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
-function SelectValueClipper(
+function SelectValueViewport(
   {
     className,
     ...props
   }: React.ComponentProps<"div">
 ) {
   return <div
-    data-slot="select-value-clipper"
+    data-slot="select-value-viewport"
     className={cn(
       "flex items-end gap-2 overflow-hidden [&>span]:truncate",
       className
@@ -183,7 +183,7 @@ export {
   Select,
   SelectGroup,
   SelectValue,
-  SelectValueClipper,
+  SelectValueViewport,
   SelectTrigger,
   SelectContent,
   SelectLabel,
