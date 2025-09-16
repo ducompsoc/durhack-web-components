@@ -38,9 +38,17 @@ function AccordionTrigger(
       {...props}
     >
       {children}
-      <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200"/>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>;
+}
+
+function AccordionChevron(
+  {
+    className,
+    ...props
+  }: React.ComponentProps<typeof ChevronDownIcon>
+) {
+  return <ChevronDownIcon className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200", className)} {...props} />
 }
 
 function AccordionContent(
@@ -59,4 +67,4 @@ function AccordionContent(
   </AccordionPrimitive.Content>;
 }
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+export { Accordion, AccordionItem, AccordionTrigger, AccordionChevron, AccordionContent }
