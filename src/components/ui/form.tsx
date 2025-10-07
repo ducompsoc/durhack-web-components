@@ -126,14 +126,14 @@ function FormControl(
 
 function FormDescription(
   {
-    className,
-    ...props
-  }: React.ComponentPropsWithRef<"p">
+    className, asChild = false, ...props
+  }: React.ComponentProps<"p"> & { asChild?: boolean }
 ) {
-  const {formDescriptionId} = useFormField()
+  const Comp = asChild ? Slot : "p"
+  const { formDescriptionId } = useFormField()
 
   return (
-    <p
+    <Comp
       data-slot="form-description"
       id={formDescriptionId}
       className={cn("text-[0.8rem] text-muted-foreground", className)}
