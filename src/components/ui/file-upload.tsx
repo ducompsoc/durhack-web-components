@@ -224,6 +224,8 @@ const FileUploadFileList = ({ className, ...props }: React.HTMLAttributes<HTMLDi
 }
 
 export {
+  type FakeFile,
+  type FileLike,
   useFileUpload,
   type DropzoneState,
   type FileUploadProps,
