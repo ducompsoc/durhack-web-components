@@ -14,11 +14,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 type DropzoneState = ReactDropzoneState
 
+type FakeFile = {
+  readonly name: string
+  readonly size: number
+  readonly type: string
+}
+
+type FileLike = File | FakeFile
+
 type FileUploadProps = {
   multiDropBehaviour: "add" | "replace"
   dropzoneOptions?: ReactDropzoneOptions | undefined
-  files?: File[]
-  onChange(files: File[]): void
+  files?: FileLike[]
+  onChange(files: FileLike[]): void
 }
 
 type FileUploadContextProps = {
@@ -27,8 +35,8 @@ type FileUploadContextProps = {
   removeFile(index: number): void
   multiDropBehaviour: "add" | "replace"
   dropzoneOptions?: ReactDropzoneOptions | undefined
-  files: File[]
-  onChange(files: File[]): void
+  files: FileLike[]
+  onChange(files: FileLike[]): void
 }
 
 const FileUploadContext = React.createContext<FileUploadContextProps | null>(null)
@@ -43,7 +51,7 @@ function useFileUpload() {
 }
 
 const FileUpload = ({ className, children, dropzoneOptions, onChange, files: _files, multiDropBehaviour, ...props }: Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> & FileUploadProps) => {
-  const [files, setFiles] = React.useState<File[]>(_files ?? [])
+  const [files, setFiles] = React.useState<FileLike[]>(_files ?? [])
   const [errorMessages, setErrorMessages] = React.useState<string[]>([])
 
   React.useEffect(() => {
@@ -165,7 +173,7 @@ const FileUploadFileList = ({ className, ...props }: React.HTMLAttributes<HTMLDi
   const { files, removeFile } = useFileUpload()
   if (files.length == 0) return null
 
-  const renderFile = (file: File, index: number) => {
+  const renderFile = (file: FileLike, index: number) => {
     return (
       <div
         key={index}
