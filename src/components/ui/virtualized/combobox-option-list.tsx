@@ -13,6 +13,8 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
+import {PopoverContent} from "@/components/ui/popover";
+import {DrawerContent} from "@/components/ui/drawer";
 
 
 export function VirtualizedComboboxOptionList() {
@@ -159,4 +161,31 @@ export function VirtualizedComboboxOptionList() {
       </CommandList>
     </Command>
   );
+}
+
+export function VirtualizedComboBoxContent(
+  {
+    className,
+    ...props
+  }: React.ComponentProps<"div"> & {
+    onAnimationEnd?: (open: boolean) => void
+  }
+) {
+  const {isDesktop} = useComboBox();
+
+  if (isDesktop) {
+    return (
+      <PopoverContent className={cn("w-[300px] p-0", className)} align="start" data-slot="combobox-content" {...props}>
+        <VirtualizedComboboxOptionList />
+      </PopoverContent>
+    )
+  }
+
+  return (
+    <DrawerContent data-slot="combobox-content" {...props}>
+      <div className="mt-4 border-t">
+        <VirtualizedComboboxOptionList/>
+      </div>
+    </DrawerContent>
+  )
 }
