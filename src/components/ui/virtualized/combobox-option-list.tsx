@@ -13,27 +13,26 @@ import {
   CommandList,
 } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
-import {PopoverContent} from "@/components/ui/popover";
-import {DrawerContent} from "@/components/ui/drawer";
+import { PopoverContent } from "@/components/ui/popover";
+import { DrawerContent } from "@/components/ui/drawer";
 
 
 function VirtualizedComboboxOptionList() {
   const { options, prominentOptions, selectedOption, setSelectedOption, setOpen, onChange } = useComboBox();
 
   function isProminent(option: Option<React.Key>) { return prominentOptions?.has(option.value) ?? false }
-
   const [filteredOptions, setFilteredOptions] = React.useState<Option<React.Key>[]>(() => options.toSorted((a, b) => +isProminent(b) - +isProminent(a) ));
-  const [focusedIndex, setFocusedIndex] = React.useState(0);
-  const [isKeyboardNavActive, setIsKeyboardNavActive] = React.useState(false);
+  const parentRef = React.useRef<HTMLDivElement | null>(null);
 
-  const parentRef = React.useRef(null);
+  function getHoveredItem() {
+    return parentRef.current?.querySelector(`[cmdk-item=""][aria-selected="true"]`)
+  }
 
   const virtualizer = useVirtualizer({
     count: filteredOptions.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 35,
   });
-
   const virtualOptions = virtualizer.getVirtualItems();
 
   const onSelectOption = (option: Option<React.Key>) => {
@@ -42,46 +41,23 @@ function VirtualizedComboboxOptionList() {
     setOpen(false)
   }
 
-  const scrollToIndex = (index: number) => {
-    virtualizer.scrollToIndex(index, {
-      align: 'center',
-    });
-  };
-
   // todo: this filter function is SHIT
   const handleSearch = (search: string) => {
-    setIsKeyboardNavActive(false);
     setFilteredOptions(
-      options.filter((option) => option.label.toString().toLowerCase().includes(search.toLowerCase() ?? [])),
+      options
+          .toSorted((a, b) => +isProminent(b) - +isProminent(a))
+          .filter((option) => option.label.toString().toLowerCase().includes(search.toLowerCase() ?? [])),
     );
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
-      case 'ArrowDown': {
-        event.preventDefault();
-        setIsKeyboardNavActive(true);
-        setFocusedIndex((prev) => {
-          const newIndex = prev === -1 ? 0 : Math.min(prev + 1, filteredOptions.length - 1);
-          scrollToIndex(newIndex);
-          return newIndex;
-        });
-        break;
-      }
-      case 'ArrowUp': {
-        event.preventDefault();
-        setIsKeyboardNavActive(true);
-        setFocusedIndex((prev) => {
-          const newIndex = prev === -1 ? filteredOptions.length - 1 : Math.max(prev - 1, 0);
-          scrollToIndex(newIndex);
-          return newIndex;
-        });
-        break;
-      }
       case 'Enter': {
         event.preventDefault();
-        if (filteredOptions[focusedIndex]) {
-          onSelectOption?.(filteredOptions[focusedIndex]);
+        const item = getHoveredItem()
+        if (item) {
+          const event = new Event("cmdk-item-select")
+          item.dispatchEvent(event)
         }
         break;
       }
@@ -92,44 +68,28 @@ function VirtualizedComboboxOptionList() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (filteredOptions[focusedIndex]) {
-      onSelectOption(filteredOptions[focusedIndex])
+    const item = getHoveredItem()
+    if (item) {
+      const event = new Event("cmdk-item-select")
+      item.dispatchEvent(event)
     }
   }
 
-  React.useEffect(() => {
-    if (!selectedOption) return;
-    const index = filteredOptions.indexOf(selectedOption);
-    setFocusedIndex(index);
-    if (index < 0) return;
-    virtualizer.scrollToIndex(index, {
-      align: 'center',
-    });
-  }, [selectedOption, filteredOptions, virtualizer]);
-
   function renderOption(virtualOption: VirtualItem) {
     const option = filteredOptions[virtualOption.index];
-    const index = virtualOption.index;
 
     return (
       <CommandItem
         key={option.value}
-        disabled={isKeyboardNavActive}
         className={cn(
             "flex justify-between cursor-pointer",
           'absolute left-0 top-0 w-full bg-transparent',
-          focusedIndex === index && 'bg-accent text-accent-foreground',
-          isKeyboardNavActive &&
-            focusedIndex !== index &&
-            'aria-selected:bg-transparent aria-selected:text-primary',
         )}
         style={{
           height: `${virtualOption.size}px`,
           transform: `translateY(${virtualOption.start}px)`,
         }}
         value={option.label}
-        onMouseEnter={() => !isKeyboardNavActive && setFocusedIndex(index)}
-        onMouseLeave={() => !isKeyboardNavActive && setFocusedIndex(-1)}
         onSelect={() => onSelectOption(option)}
       >
         <div className="flex items-end gap-2 overflow-hidden">
@@ -149,13 +109,11 @@ function VirtualizedComboboxOptionList() {
   }
 
   return (
-    <Command shouldFilter={false} onKeyDown={handleKeyDown} onSubmit={handleSubmit}>
+    <Command loop={false} shouldFilter={false} onKeyDown={handleKeyDown} onSubmit={handleSubmit}>
       <CommandInput onValueChange={handleSearch} placeholder="Filter options..." />
       <CommandList
         ref={parentRef}
         className={"w-full"}
-        onMouseDown={() => setIsKeyboardNavActive(false)}
-        onMouseMove={() => setIsKeyboardNavActive(false)}
       >
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
