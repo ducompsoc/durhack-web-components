@@ -26,7 +26,7 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils";
 
-type Option<TValue extends React.Key> = {
+export type Option<TValue extends React.Key> = {
   value: TValue
   label: string
   emoji?: string
@@ -261,4 +261,4 @@ function OptionList() {
   )
 }
 
-export { ComboBox, ComboBoxTrigger, ComboBoxButton, ComboBoxContent }
+export { useComboBox, ComboBox, ComboBoxTrigger, ComboBoxButton, ComboBoxContent }
