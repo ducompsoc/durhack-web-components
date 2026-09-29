@@ -1,6 +1,6 @@
-import { useVirtualizer, type VirtualItem } from '@tanstack/react-virtual';
-import { Check } from 'lucide-react';
-import * as React from 'react';
+import { useVirtualizer, type VirtualItem } from "@tanstack/react-virtual"
+import { Check } from "lucide-react"
+import * as React from "react"
 
 import { useComboBox, type Option } from "@/components/ui/combobox"
 
@@ -11,10 +11,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command'
-import { cn } from '@/lib/utils'
-import { PopoverContent } from "@/components/ui/popover";
-import { DrawerContent } from "@/components/ui/drawer";
+} from "@/components/ui/command"
+import { cn } from "@/lib/utils"
+import { PopoverContent } from "@/components/ui/popover"
+import { DrawerContent } from "@/components/ui/drawer"
 
 
 function VirtualizedComboboxOptionList() {
@@ -52,7 +52,7 @@ function VirtualizedComboboxOptionList() {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {
-      case 'Enter': {
+      case "Enter": {
         event.preventDefault();
         const item = getHoveredItem()
         if (item) {
@@ -82,8 +82,8 @@ function VirtualizedComboboxOptionList() {
       <CommandItem
         key={option.value}
         className={cn(
-            "flex justify-between cursor-pointer",
-          'absolute left-0 top-0 w-full bg-transparent',
+          "flex justify-between cursor-pointer",
+          "absolute left-0 top-0 w-full bg-transparent",
         )}
         style={{
           height: `${virtualOption.size}px`,
@@ -98,10 +98,10 @@ function VirtualizedComboboxOptionList() {
         </div>
         <Check
           className={cn(
-            'mr-2 h-4 w-4',
+            "mr-2 h-4 w-4",
             selectedOption?.value === option.value
-              ? 'opacity-100'
-              : 'opacity-0',
+              ? "opacity-100"
+              : "opacity-0",
           )}
         />
       </CommandItem>
