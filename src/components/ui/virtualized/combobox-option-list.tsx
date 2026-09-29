@@ -90,6 +90,13 @@ function VirtualizedComboboxOptionList() {
     }
   };
 
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (filteredOptions[focusedIndex]) {
+      onSelectOption(filteredOptions[focusedIndex])
+    }
+  }
+
   React.useEffect(() => {
     if (!selectedOption) return;
     const index = filteredOptions.indexOf(selectedOption);
@@ -142,7 +149,7 @@ function VirtualizedComboboxOptionList() {
   }
 
   return (
-    <Command shouldFilter={false} onKeyDown={handleKeyDown}>
+    <Command shouldFilter={false} onKeyDown={handleKeyDown} onSubmit={handleSubmit}>
       <CommandInput onValueChange={handleSearch} placeholder="Filter options..." />
       <CommandList
         ref={parentRef}
