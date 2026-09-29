@@ -125,6 +125,10 @@ function VirtualizedComboboxOptionList() {
         onMouseLeave={() => !isKeyboardNavActive && setFocusedIndex(-1)}
         onSelect={() => onSelectOption(option)}
       >
+        <div className="flex items-end gap-2 overflow-hidden">
+          {option.emoji ? <span>{option.emoji}</span> : <></>}
+          <span className="truncate">{option.label}</span>
+        </div>
         <Check
           className={cn(
             'mr-2 h-4 w-4',
@@ -133,7 +137,6 @@ function VirtualizedComboboxOptionList() {
               : 'opacity-0',
           )}
         />
-        {option.label}
       </CommandItem>
     )
   }
