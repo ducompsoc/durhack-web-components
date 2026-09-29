@@ -17,7 +17,7 @@ import {PopoverContent} from "@/components/ui/popover";
 import {DrawerContent} from "@/components/ui/drawer";
 
 
-export function VirtualizedComboboxOptionList() {
+function VirtualizedComboboxOptionList() {
   const { options, prominentOptions, selectedOption, setSelectedOption, setOpen, onChange } = useComboBox();
 
   function isProminent(option: Option<React.Key>) { return prominentOptions?.has(option.value) ?? false }
