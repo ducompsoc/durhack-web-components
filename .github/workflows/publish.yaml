@@ -29,6 +29,6 @@ jobs:
           if [[ "${{ github.event.release.tag_name }}" == *-* ]]; then 
             npm_tag=next;
           fi
-          pnpm publish --access public --no-git-checks --tag "$npm_tag"
+          pnpm stage publish --access public --no-git-checks --tag "$npm_tag"
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
