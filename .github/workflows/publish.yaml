@@ -25,7 +25,7 @@ jobs:
       - run: |
           jq '.version = "0.0.0"' package.json > tmp.json
           mv tmp.json package.json
-          pnpm version --no-git-tag-version "${{ github.event.release.tag_name }}"
+          pnpm version --no-git-tag-version --no-git-checks "${{ github.event.release.tag_name }}"
       - run: |
           npm_tag=latest
           if [[ "${{ github.event.release.tag_name }}" == *-* ]]; then 
