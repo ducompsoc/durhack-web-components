@@ -23,6 +23,8 @@ jobs:
       - run: git config --global user.name "${{ github.actor }}"
       - run: git config --global user.email "github-action-${{ github.actor }}@users.noreply.github.com"
       - run: |
+          jq '.version = "0.0.0"' package.json > tmp.json
+          mv tmp.json package.json
           pnpm version --no-git-tag-version "${{ github.event.release.tag_name }}"
       - run: |
           npm_tag=latest
