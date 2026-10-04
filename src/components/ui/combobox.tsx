@@ -119,7 +119,7 @@ function ComboBox<TValue extends React.Key>(
   
   return (
     <ContextProvider>
-      <Drawer open={open} onOpenChange={(open, event) => setOpen(open)} data-slot="combobox" {...props}>
+      <Drawer open={open} onOpenChange={(open, event) => setOpen(open)} data-slot="combobox" showSwipeHandle={true} {...props}>
         {children}
       </Drawer>
     </ContextProvider>
