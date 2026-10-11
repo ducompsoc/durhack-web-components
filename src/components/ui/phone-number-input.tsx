@@ -143,14 +143,15 @@ function CountrySelect(
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger render={
         <Button
           type="button"
           variant="outline"
           size="form"
           className={cn("flex gap-1 rounded-e-none rounded-s-lg px-3")}
           disabled={disabled}
-        >
+        />
+      }>
           <FlagComponent country={value} countryName={value}/>
           <ChevronsUpDown
             className={cn(
@@ -158,7 +159,6 @@ function CountrySelect(
               disabled ? "hidden" : "opacity-100",
             )}
           />
-        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
         <Command>

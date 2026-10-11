@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/popover"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils";
+import {DrawerTriggerProps} from "@base-ui/react";
 
 export type Option<TValue extends React.Key> = {
   value: TValue
@@ -71,7 +72,10 @@ function ComboBox<TValue extends React.Key>(
     options,
     prominentOptions,
     ...props 
-  }: React.ComponentPropsWithoutRef<typeof Popover> & ComboBoxProps<TValue>
+  }: {
+      children?: React.ReactNode;
+      modal?: boolean | 'trap-focus' | undefined;
+  } & ComboBoxProps<TValue>
 ) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
@@ -106,7 +110,7 @@ function ComboBox<TValue extends React.Key>(
   if (isDesktop) {
     return (
       <ContextProvider>
-        <Popover open={open} onOpenChange={setOpen} data-slot="combobox" {...props}>
+        <Popover open={open} onOpenChange={(open, event) => setOpen(open)} data-slot="combobox" {...props}>
           {children}
         </Popover>
       </ContextProvider>
@@ -115,7 +119,7 @@ function ComboBox<TValue extends React.Key>(
   
   return (
     <ContextProvider>
-      <Drawer open={open} onOpenChange={setOpen} data-slot="combobox" {...props}>
+      <Drawer open={open} onOpenChange={(open, event) => setOpen(open)} data-slot="combobox" showSwipeHandle={true} {...props}>
         {children}
       </Drawer>
     </ContextProvider>
@@ -123,26 +127,15 @@ function ComboBox<TValue extends React.Key>(
 }
 
 function ComboBoxTrigger(
-  {
-    children,
-    ...props
-  }: React.ComponentProps<"button">
+  props: React.ComponentProps<"button"> & Pick<DrawerTriggerProps, "render">
 ) {
   const {isDesktop} = useComboBox();
 
   if (isDesktop) {
-    return (
-      <PopoverTrigger asChild data-slot="combobox-trigger" {...props}>
-        {children}
-      </PopoverTrigger>
-    )
+    return <PopoverTrigger data-slot="combobox-trigger" {...props} />
   }
 
-  return (
-    <DrawerTrigger asChild data-slot="combobox-trigger" {...props}>
-      {children}
-    </DrawerTrigger>
-  )
+  return <DrawerTrigger data-slot="combobox-trigger" {...props} />
 }
 
 function ComboBoxButton(
@@ -241,7 +234,7 @@ function OptionList() {
   return (
     <Command>
       <CommandInput placeholder="Filter options..." />
-      <CommandList>
+      <CommandList className="overscroll-contain">
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
           {options

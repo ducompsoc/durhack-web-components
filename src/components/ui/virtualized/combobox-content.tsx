@@ -43,6 +43,7 @@ function VirtualizedComboboxOptionList() {
 
   // todo: this filter function is SHIT
   const handleSearch = (search: string) => {
+    virtualizer.scrollToIndex(0)
     setFilteredOptions(
       options
           .toSorted((a, b) => +isProminent(b) - +isProminent(a))
@@ -113,7 +114,7 @@ function VirtualizedComboboxOptionList() {
       <CommandInput onValueChange={handleSearch} placeholder="Filter options..." />
       <CommandList
         ref={parentRef}
-        className={"w-full"}
+        className="w-full overscroll-contain"
       >
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
@@ -151,7 +152,7 @@ export function VirtualizedComboBoxContent(
 
   return (
     <DrawerContent data-slot="combobox-content" {...props}>
-      <div className="mt-4 border-t">
+      <div className="mt-4 border-t max-h-screen">
         <VirtualizedComboboxOptionList/>
       </div>
     </DrawerContent>
